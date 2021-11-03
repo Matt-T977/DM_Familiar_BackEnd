@@ -1,0 +1,166 @@
+// DM's Familiar ERD
+
+
+// UserSchema
+{
+    "Name" : string,
+    "Email" : string,
+    "Type" : string,
+    "Projects" : [ProjectID]
+}
+
+// ProjectSchema
+{
+    "Name" : string,
+    "CreationDate" : DateTime,
+    "Summary" : string,
+    "Template" : [TemplateSchema]
+}
+    // TemplateSchema
+    {
+        "Type" : string,
+        "IncludeCharSheet" : bool,
+        "CharacterSheet" : [CharacterSheetID],
+        "IncludeTextDoc" : bool,
+        "TextDocuments" : [BookID],
+        "IncludeStaticAsset" : bool,
+        "StaticAssets" : [StaticAssetID],
+        "IncludeVideo" : bool,
+        "Video" : [VideoID],
+        "IncludeAudio" : bool,
+        "Audio" : [AudioID],
+        "IncludeLocation" : bool,
+        "Location" : [LocationID]
+    }
+
+// BookSchema
+{
+    "Title" : string,
+    "Summaary" : string,
+    "Catergory" : string,
+    "Chapter" : [ChapterSchema]
+}
+    // ChapterSchema
+    {
+        "ChapterNumber" : int,
+        "Title" : string,
+        "Summary" : string,
+        "Body" : string
+    }
+
+// StaticAssetSchema
+{
+    "Title" : string,
+    "Media" : multi,
+    "type" : string,
+}
+
+// VideoSchema
+{
+    "Title" : string,
+    "Media" : multi,
+    "Summary" : string,
+    "Duration" : int,
+}
+
+// AudioSchema
+{
+    "Title" : string,
+    "Media" : multi,
+    "Summary" : string,
+    "Duration" : int,
+}
+
+// LocationSchema
+{
+    "Name" : string,
+    "Location Description" : string,
+    "Description" : string,
+    "RelatedStaticAssets" : [StaticAssetID],
+    "RelatedTextDocs" : [BookID],
+    "RelatedVideo" : [VideoID],
+    "RelatedAudio" : [AudioID],
+    "LocationCharacters" : [CharacterID],
+    "MinorLocations" : [MinorLocationSchema]
+}
+    //MinorLocationSchema
+    {
+        "Name" : string,
+        "Location Description" : string,
+        "Description" : string,
+        "RelatedStaticAssets" : [StaticAssetID],
+        "RelatedTextDocs" : [BookID],
+        "RelatedVideo" : [VideoID],
+        "RelatedAudio" : [AudioID],
+        "LocationCharacters" : [CharacterID],
+    }
+
+// CharacterSchema
+{
+    //Main Info
+    "PlayerCharacter" : bool,
+    "PlayerName" : string,
+    "Name" : string,
+    "Class" : string,
+    "Level" : int,
+    "Race" : string,
+    "Background" : string,
+    "Alignment" : string,
+
+    //Attributes
+    "Strength" : int,
+    "Dexterity" : int,
+    "Constitution" : int,
+    "Intelligence" : int,
+    "Wisdom" : int,
+    "Charisma" : int,
+
+    //General Values
+    "Health" : int,
+    "TempHP" : int,
+    "ArmorClass" : int,
+    "Initiative" : int,
+    "Speed" : int,
+    "ProficiencyBonus" : int,
+    "PassivePerception" : int,
+    "PassiveInvestigation" : int,
+    "DeathSuccess" : int,
+    "DeathFail" : int,
+
+    //Proficiencies
+        //Saving Throws
+        "Strength" : bool,
+        "Dexterity" : bool,
+        "Constitution" : bool,
+        "Intelligence" : bool,
+        "Wisdom" : bool,
+        "Charisma" : bool,
+        //Skill Checks
+        "Acrobatics" : bool,
+        "AnimalHandling" : bool,
+        "Arcana" : bool,
+        "Athletics" : bool,
+        "Deception" : bool,
+        "History" : bool,
+        "Insight" : bool,
+        "Intimidation" : bool,
+        "Investigation" : bool,
+        "Medicine" : bool,
+        "Nature" : bool,
+        "Perception" : bool,
+        "Performance" : bool,
+        "Persuasion" : bool,
+        "Religion" : bool,
+        "SleightOfHand" : bool,
+        "Stealth" : bool,
+        "Survival" : bool,
+
+    //Personality Traits
+    "Traits" : string,
+    "Ideals" : string,
+    "Bonds" : string,
+    "Flaws" : string,
+
+    //Features & Traits
+    "Features" : [FeatureSchema]
+}
