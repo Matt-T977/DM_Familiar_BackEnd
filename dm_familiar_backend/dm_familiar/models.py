@@ -12,9 +12,6 @@ class Project(models.Model):
     name = models.TextField(max_length=20,blank=True,null=True)
     creation_date = models.DateField(null=True, blank=True)
     summary = models.TextField(max_length=250,blank=True,null=True)
-
-class Template(models.Model):
-    template_type = models.TextField(max_length=20,blank=True,null=True)
     include_char_sheet = models.BooleanField(default=False)
     include_text_doc = models.BooleanField(default=False)
     include_static_assets = models.BooleanField(default=False)

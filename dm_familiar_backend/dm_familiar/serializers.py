@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Audio, Book, Chapter, Character, Location, MinorLocation, StaticAsset, User, Project, Template, Video
+from .models import Audio, Book, Chapter, Character, Location, MinorLocation, StaticAsset, User, Project, Video
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,13 +17,6 @@ class ProjectSerializer(serializers.ModelSerializer):
             'name',
             'creation_date',
             'summary',
-        ]
-
-class TemplateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Template
-        fields = [
-            'template_type',
             'include_char_sheet',
             'include_text_doc',
             'include_static_assets',
