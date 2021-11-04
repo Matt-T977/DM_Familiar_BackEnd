@@ -8,7 +8,6 @@ class UserSerializer(serializers.ModelSerializer):
             'name',
             'email',
             'creator_type',
-            'project',
         ]
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -18,7 +17,6 @@ class ProjectSerializer(serializers.ModelSerializer):
             'name',
             'creation_date',
             'summary',
-            'template',
         ]
 
 class TemplateSerializer(serializers.ModelSerializer):
@@ -27,17 +25,11 @@ class TemplateSerializer(serializers.ModelSerializer):
         fields = [
             'template_type',
             'include_char_sheet',
-            'character_sheets',
             'include_text_doc',
-            'text_documents',
             'include_static_assets',
-            'static_assets',
             'include_video',
-            'videos',
             'include_audio',
-            'audio'
             'include_location',
-            'locations',
         ]
 
 class BookSerializer(serializers.ModelSerializer):
@@ -47,7 +39,6 @@ class BookSerializer(serializers.ModelSerializer):
             'title',
             'summary',
             'category',
-            'chapters',
         ]
 
 class ChapterSerializer(serializers.ModelSerializer):
@@ -69,13 +60,6 @@ class StaticAssetSerializer(serializers.ModelSerializer):
             'media_type',
         ]
 
-class StaticAssetSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = StaticAsset
-        fields = [
-            'title',
-            'media_type',
-        ]
 
 class VideoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -102,12 +86,6 @@ class LocationSerializer(serializers.ModelSerializer):
             'name',
             'location_description',
             'description',
-            'related_static_assets',
-            'related_text_docs',
-            'related_videos',
-            'related_audio',
-            'location_characters',
-            'minor_locations',
         ]
 
 class MinorLocationSerializer(serializers.ModelSerializer):
@@ -117,11 +95,6 @@ class MinorLocationSerializer(serializers.ModelSerializer):
             'name',
             'location_description',
             'description',
-            'related_static_assets',
-            'related_text_docs',
-            'related_videos',
-            'related_audio',
-            'location_characters',
         ]
 
 class CharacterSerializer(serializers.ModelSerializer):

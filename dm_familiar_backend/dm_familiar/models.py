@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.fields import TextField, BooleanField, IntegerField, DateField
 
 
 # Create your models here.
@@ -6,34 +7,25 @@ class User(models.Model):
     name = models.TextField(max_length=20,blank=True,null=True)
     email = models.TextField(max_length=35,blank=True,null=True)
     creator_type = models.TextField(max_length=20,blank=True,null=True)
-    project = []
 
 class Project(models.Model):
     name = models.TextField(max_length=20,blank=True,null=True)
     creation_date = models.DateField(null=True, blank=True)
     summary = models.TextField(max_length=250,blank=True,null=True)
-    template = []
 
 class Template(models.Model):
     template_type = models.TextField(max_length=20,blank=True,null=True)
     include_char_sheet = models.BooleanField(default=False)
-    character_sheets = []
     include_text_doc = models.BooleanField(default=False)
-    text_documents = []
     include_static_assets = models.BooleanField(default=False)
-    static_assets = []
     include_video = models.BooleanField(default=False)
-    videos = []
     include_audio = models.BooleanField(default=False)
-    audio = []
     include_location = models.BooleanField(default=False)
-    locations = []
 
 class Book(models.Model):
     title = models.TextField(max_length=35,blank=True,null=True)
     summary = models.TextField(max_length=250,blank=True,null=True)
     category = models.TextField(max_length=35,blank=True,null=True)
-    chapters = []
 
 class Chapter(models.Model):
     chapter_number = models.IntegerField(default=0)
@@ -59,22 +51,11 @@ class Location(models.Model):
     name = models.TextField(max_length=35,blank=True,null=True)
     location_description = models.TextField(max_length=250,blank=True,null=True)
     description = models.TextField(max_length=250,blank=True,null=True)
-    related_static_assets = []
-    related_text_docs = []
-    related_videos = []
-    related_audio = []
-    location_characters = []
-    minor_locations = []
 
 class MinorLocation(models.Model):
     name = models.TextField(max_length=35,blank=True,null=True)
     location_description = models.TextField(max_length=250,blank=True,null=True)
     description = models.TextField(max_length=250,blank=True,null=True)
-    related_static_assets = []
-    related_text_docs = []
-    related_videos = []
-    related_audio = []
-    location_characters = []
 
 class Character(models.Model):
     # Main Info
