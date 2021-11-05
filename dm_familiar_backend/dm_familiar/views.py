@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http.response import Http404
-from .serializers import AudioSerializer, BookSerializer, ChapterSerializer, ProjectSerializer, StaticAssetSerializer, VideoSerializer
+from .serializers import AudioSerializer, BookSerializer, ChapterSerializer, LocationSerializer, ProjectSerializer, StaticAssetSerializer, VideoSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import serializers, status
@@ -327,3 +327,53 @@ class Audio(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
+class LocationList(APIView):
+
+
+    #  Get All Locations
+    def get(self, request, ProjectId):
+        location_list = []
+        docs = db.collection(u'Projects').document(ProjectId).collection(u'Locations').stream()
+
+        for doc in docs:
+            location_list.append(doc.to_dict())
+        serializer = LocationSerializer(location_list, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Create New Location
+    def post(self, request, ProjectId):
+        serializer = LocationSerializer(data=request.data)
+        if serializer.is_valid():
+            db.collection('Projects').document(ProjectId).collection(
+                u'Locations').document(request.data.get("title")).set(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class Location(APIView):
+
+
+    # Get selected Location
+    def get(self, request, ProjectId, LocationId):
+        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+            u'Locations').document(LocationId)
+
+        doc = doc_ref.get()
+        if doc.exists:
+            serializer = LocationSerializer(doc.to_dict())
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # Edit Location Asset
+    def patch(self, request, ProjectId, LocationId):
+        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+            u'Locations').document(LocationId)
+        doc_ref.update(request.data)
+
+        doc = doc_ref.get()
+        if doc.exists:
+            serializer = LocationSerializer(doc.to_dict())
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
