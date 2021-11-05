@@ -21,7 +21,6 @@ class ProjectList(APIView):
         project_list = []
         docs = db.collection(u'Projects').stream()
         for doc in docs:
-            print(doc)
             project_list.append(doc.to_dict())
         serializer = ProjectSerializer(project_list, many=True)
         return Response(serializer.data)
@@ -32,7 +31,6 @@ class ProjectList(APIView):
             db.collection('Projects').document(request.data.get("name")).set(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class Project(APIView):
@@ -59,12 +57,37 @@ class Project(APIView):
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+
+class BookList(APIView):
+    
+    
+    def get(self, request, ProjectId):
+        book_list = []
+        docs = db.collection(u'Projects').document(ProjectId).collection(
+                u'Books').stream()
+
+        for doc in docs:
+            book_list.append(doc.to_dict())
+        serializer = BookSerializer(book_list, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, ProjectId):
+        serializer = BookSerializer(data=request.data)
+        if serializer.is_valid():
+            db.collection('Projects').document(ProjectId).collection(
+                'Books').document(request.data.get("title")).set(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
+
 class Book(APIView):
 
 
     def get(self, request, ProjectId, BookId):
         doc_ref = db.collection(u'Projects').document(ProjectId).collection(
             u'Books').document(BookId)
+
 
         doc = doc_ref.get()
         if doc.exists:
@@ -73,9 +96,14 @@ class Book(APIView):
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def post(self, request, ProjectId):
-        serializer = BookSerializer(data=request.data)
-        if serializer.is_valid():
-            db.collection('Projects').document(ProjectId).collection(
-                'Books').document(request.data.get("title")).set(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def patch(self, request, ProjectId, BookId):
+        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+            u'Books').document(BookId)
+        doc_ref.update(request.data)
+
+        doc = doc_ref.get()
+        if doc.exists:
+            serializer = BookSerializer(doc.to_dict())
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
