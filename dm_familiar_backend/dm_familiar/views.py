@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http.response import Http404
-from .serializers import ProjectSerializer
+from .serializers import BookSerializer, ProjectSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import serializers, status
@@ -55,8 +55,27 @@ class Project(APIView):
         doc = doc_ref.get()
         if doc.exists:
             serializer = ProjectSerializer(doc.to_dict())
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+class Book(APIView):
+
+
+    def get(self, request, ProjectId, BookId):
+        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+            u'Books').document(BookId)
+
+        doc = doc_ref.get()
+        if doc.exists:
+            serializer = BookSerializer(doc.to_dict())
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-
+    def post(self, request, ProjectId):
+        serializer = BookSerializer(data=request.data)
+        if serializer.is_valid():
+            db.collection('Projects').document(ProjectId).collection(
+                'Books').document(request.data.get("title")).set(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
