@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http.response import Http404
-from .serializers import BookSerializer, ChapterSerializer, ProjectSerializer, StaticAssetSerializer
+from .serializers import BookSerializer, ChapterSerializer, ProjectSerializer, StaticAssetSerializer, VideoSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import serializers, status
@@ -223,3 +223,53 @@ class StaticAsset(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     
+class VideoList(APIView):
+
+
+    # Get All Videos
+    def get(self, request, ProjectId):
+        video_list = []
+        docs = db.collection(u'Projects').document(ProjectId).collection(u'Videos').stream()
+
+        for doc in docs:
+            video_list.append(doc.to_dict())
+        serializer = VideoSerializer(video_list, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Create New Video Asset
+    def post(self, request, ProjectId):
+        serializer = VideoSerializer(data=request.data)
+        if serializer.is_valid():
+            db.collection('Projects').document(ProjectId).collection(
+                u'Videos').document(request.data.get("title")).set(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class Video(APIView):
+
+
+    # Get selected Video
+    def get(self, request, ProjectId, VideoId):
+        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+            u'Videos').document(VideoId)
+
+        doc = doc_ref.get()
+        if doc.exists:
+            serializer = VideoSerializer(doc.to_dict())
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # Edit Video Asset
+    def patch(self, request, ProjectId, VideoId):
+        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+            u'Videos').document(VideoId)
+        doc_ref.update(request.data)
+
+        doc = doc_ref.get()
+        if doc.exists:
+            serializer = VideoSerializer(doc.to_dict())
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
