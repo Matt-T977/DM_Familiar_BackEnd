@@ -41,7 +41,6 @@ class ChapterSerializer(serializers.ModelSerializer):
             'chapter_number',
             'title',
             'summary',
-            'category',
             'body',
         ]
 
