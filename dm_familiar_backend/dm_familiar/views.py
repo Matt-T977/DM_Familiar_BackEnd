@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http.response import Http404
-from .serializers import BookSerializer, ChapterSerializer, ProjectSerializer, StaticAssetSerializer, VideoSerializer
+from .serializers import AudioSerializer, BookSerializer, ChapterSerializer, ProjectSerializer, StaticAssetSerializer, VideoSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import serializers, status
@@ -194,6 +194,7 @@ class StaticAssetList(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class StaticAsset(APIView):
 
 
@@ -273,3 +274,56 @@ class Video(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class AudioList(APIView):
+
+    #  Get All Audio
+    def get(self, request, ProjectId):
+        audio_list = []
+        docs = db.collection(u'Projects').document(ProjectId).collection(u'Audio').stream()
+
+        for doc in docs:
+            audio_list.append(doc.to_dict())
+        serializer = AudioSerializer(audio_list, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Create New Audio Asset
+    def post(self, request, ProjectId):
+        serializer = AudioSerializer(data=request.data)
+        if serializer.is_valid():
+            db.collection('Projects').document(ProjectId).collection(
+                u'Audio').document(request.data.get("title")).set(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class Audio(APIView):
+
+
+    # Get selected Audio
+    def get(self, request, ProjectId, AudioId):
+        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+            u'Audio').document(AudioId)
+
+        doc = doc_ref.get()
+        if doc.exists:
+            serializer = VideoSerializer(doc.to_dict())
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # Edit Audio Asset
+    def patch(self, request, ProjectId, AudioId):
+        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+            u'Audio').document(AudioId)
+        doc_ref.update(request.data)
+
+        doc = doc_ref.get()
+        if doc.exists:
+            serializer = AudioSerializer(doc.to_dict())
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
