@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http.response import Http404
-from .serializers import AudioSerializer, BookSerializer, ChapterSerializer, LocationSerializer, ProjectSerializer, StaticAssetSerializer, VideoSerializer
+from .serializers import AudioSerializer, BookSerializer, ChapterSerializer, CharacterSerializer, LocationSerializer, MinorLocationSerializer, ProjectSerializer, StaticAssetSerializer, VideoSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import serializers, status
@@ -247,6 +247,7 @@ class VideoList(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class Video(APIView):
 
 
@@ -278,6 +279,7 @@ class Video(APIView):
 
 class AudioList(APIView):
 
+
     #  Get All Audio
     def get(self, request, ProjectId):
         audio_list = []
@@ -297,6 +299,7 @@ class AudioList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class Audio(APIView):
 
@@ -330,7 +333,7 @@ class Audio(APIView):
 class LocationList(APIView):
 
 
-    #  Get All Locations
+    # Get All Locations
     def get(self, request, ProjectId):
         location_list = []
         docs = db.collection(u'Projects').document(ProjectId).collection(u'Locations').stream()
@@ -349,6 +352,7 @@ class LocationList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class Location(APIView):
 
@@ -374,6 +378,116 @@ class Location(APIView):
         doc = doc_ref.get()
         if doc.exists:
             serializer = LocationSerializer(doc.to_dict())
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class MinorLocationList(APIView):
+
+
+    # Get All Minor Locations of a location
+    def get(self, request, ProjectId, LocationId):
+        minor_location_list = []
+        docs = db.collection(u'Projects').document(ProjectId).collection(
+            u'Locations').document(LocationId).collection(u'Minor-Locations').stream()
+
+        for doc in docs:
+            minor_location_list.append(doc.to_dict())
+        serializer = MinorLocationSerializer(minor_location_list, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Create New Minor Location under specific location
+    def post(self, request, ProjectId, LocationId):
+        serializer = MinorLocationSerializer(data=request.data)
+        if serializer.is_valid():
+            db.collection('Projects').document(ProjectId).collection(
+                u'Locations').document(LocationId).collection(
+                    u'Minor-Locations').document(request.data.get("title")).set(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MinorLocation(APIView):
+
+
+    # Get selected Minor Location of a location
+    def get(self, request, ProjectId, LocationId, MinorLocationId):
+        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+            u'Locations').document(LocationId).collection(
+                'Minor-Locations').document(MinorLocationId)
+
+        doc = doc_ref.get()
+        if doc.exists:
+            serializer = MinorLocationSerializer(doc.to_dict())
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # Edit Minor Location of a location
+    def patch(self, request, ProjectId, LocationId, MinorLocationId):
+        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+            u'Locations').document(LocationId).collection(
+                'Minor-Locations').document(MinorLocationId)
+        doc_ref.update(request.data)
+
+        doc = doc_ref.get()
+        if doc.exists:
+            serializer = MinorLocationSerializer(doc.to_dict())
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class CharacterList(APIView):
+
+
+        # Get All Characters
+    def get(self, request, ProjectId):
+        character_list = []
+        docs = db.collection(u'Projects').document(ProjectId).collection(u'Characters').stream()
+
+        for doc in docs:
+            character_list.append(doc.to_dict())
+        serializer = CharacterSerializer(character_list, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Create New Character
+    def post(self, request, ProjectId):
+        serializer = CharacterSerializer(data=request.data)
+        if serializer.is_valid():
+            db.collection('Projects').document(ProjectId).collection(
+                u'Characters').document(request.data.get("name")).set(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class Character(APIView):
+
+
+    # Get selected Character
+    def get(self, request, ProjectId, CharacterId):
+        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+            u'Characters').document(CharacterId)
+
+        doc = doc_ref.get()
+        if doc.exists:
+            serializer = CharacterSerializer(doc.to_dict())
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # Edit Character
+    def patch(self, request, ProjectId, CharacterId):
+        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+            u'Characters').document(CharacterId)
+        doc_ref.update(request.data)
+
+        doc = doc_ref.get()
+        if doc.exists:
+            serializer = CharacterSerializer(doc.to_dict())
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
