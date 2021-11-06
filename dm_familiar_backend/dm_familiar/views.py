@@ -62,6 +62,11 @@ class Project(APIView):
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+    # Delete Project
+    def delete(self, request, ProjectId):
+        db.collection(u'Projects').document(ProjectId).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class BookList(APIView):
     
@@ -115,6 +120,12 @@ class Book(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # Delete Book
+    def delete(self, request, ProjectId, BookId):
+        db.collection(u'Projects').document(ProjectId).collection(
+            u'Books').document(BookId).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ChapterList(APIView):
@@ -170,6 +181,11 @@ class Chapter(APIView):
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+    # Delete Chapter
+    def delete(self, request, ProjectId, BookId, ChapterId):
+        db.collection(u'Projects').document(ProjectId).collection(
+            u'Books').document(BookId).collection('Chapters').document(ChapterId).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class StaticAssetList(APIView):
 
@@ -189,7 +205,7 @@ class StaticAssetList(APIView):
         serializer = StaticAssetSerializer(data=request.data)
         if serializer.is_valid():
             db.collection('Projects').document(ProjectId).collection(
-                u'StaticAssets').document(request.data.get("title")).set(serializer.data)
+                'StaticAssets').document(request.data.get("title")).set(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -222,6 +238,12 @@ class StaticAsset(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # Delete Static Asset
+    def delete(self, request, ProjectId, StaticAssetId):
+        db.collection(u'Projects').document(ProjectId).collection(
+            u'StaticAssets').document(StaticAssetId).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     
 class VideoList(APIView):
@@ -276,6 +298,12 @@ class Video(APIView):
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+    # Delete Video Asset
+    def delete(self, request, ProjectId, VideoId):
+        db.collection(u'Projects').document(ProjectId).collection(
+            u'Videos').document(VideoId).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class AudioList(APIView):
 
@@ -329,6 +357,12 @@ class Audio(APIView):
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+    # Delete Audio Asset
+    def delete(self, request, ProjectId, AudioId):
+        db.collection(u'Projects').document(ProjectId).collection(
+            u'Audio').document(AudioId).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class LocationList(APIView):
 
@@ -381,6 +415,12 @@ class Location(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # Delete Location Asset
+    def delete(self, request, ProjectId, LocationId):
+        db.collection(u'Projects').document(ProjectId).collection(
+            u'Locations').document(LocationId).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class MinorLocationList(APIView):
@@ -439,6 +479,13 @@ class MinorLocation(APIView):
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+    # Delete Minor Location of a location
+    def delete(self, request, ProjectId, LocationId, MinorLocationId):
+        db.collection(u'Projects').document(ProjectId).collection(
+            u'Locations').document(LocationId).collection(
+                'Minor-Locations').document(MinorLocationId).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class CharacterList(APIView):
 
@@ -491,3 +538,9 @@ class Character(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # Delete Character
+    def delete(self, request, ProjectId, CharacterId):
+        db.collection(u'Projects').document(ProjectId).collection(
+            u'Characters').document(CharacterId).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
