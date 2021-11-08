@@ -5,8 +5,8 @@ from django.db.models.fields import TextField, BooleanField, IntegerField, DateF
 # Create your models here.
 class User(models.Model):
     name = models.TextField(max_length=20,blank=True,null=True)
+    uid = models.TextField(max_length=35,blank=True,null=True)
     email = models.TextField(max_length=35,blank=True,null=True)
-    creator_type = models.TextField(max_length=20,blank=True,null=True)
 
 class Project(models.Model):
     name = models.TextField(max_length=20,blank=True,null=True)

@@ -6,8 +6,8 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'name',
+            'uid',
             'email',
-            'creator_type',
         ]
 
 class ProjectSerializer(serializers.ModelSerializer):

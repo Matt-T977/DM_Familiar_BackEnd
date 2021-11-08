@@ -18,9 +18,9 @@ class ProjectList(APIView):
 
 
     # Get All Projects
-    def get(self, request):
+    def get(self, request, uid):
         project_list = []
-        docs = db.collection(u'Projects').stream()
+        docs = db.collection(u'Users').document(uid).collection(u'Projects').stream()
 
         for doc in docs:
             project_list.append(doc.to_dict())
@@ -28,10 +28,10 @@ class ProjectList(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # Create New Project
-    def post(self, request):
+    def post(self, request, uid):
         serializer = ProjectSerializer(data=request.data)
         if serializer.is_valid():
-            db.collection('Projects').document(request.data.get("name")).set(serializer.data)
+            db.collection(u'Users').document(uid).collection('Projects').document(request.data.get("name")).set(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -40,8 +40,8 @@ class Project(APIView):
 
 
     # Get Selected Project
-    def get(self, request, ProjectId):
-        doc_ref = db.collection(u'Projects').document(ProjectId)
+    def get(self, request, ProjectId, uid):
+        doc_ref = db.collection(u'Users').document(uid).collection(u'Projects').document(ProjectId)
 
         doc = doc_ref.get()
         if doc.exists:
@@ -51,8 +51,8 @@ class Project(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     #Edit Project
-    def patch(self, request, ProjectId):
-        doc_ref = db.collection(u'Projects').document(ProjectId)
+    def patch(self, request, ProjectId, uid):
+        doc_ref = db.collection(u'Users').document(uid).collection(u'Projects').document(ProjectId)
         doc_ref.update(request.data)
 
         doc = doc_ref.get()
@@ -63,8 +63,8 @@ class Project(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     # Delete Project
-    def delete(self, request, ProjectId):
-        db.collection(u'Projects').document(ProjectId).delete()
+    def delete(self, request, ProjectId, uid):
+        db.collection(u'Users').document(uid).collection(u'Projects').document(ProjectId).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "080839c0469379eccc474a550367cb40fca5b0d35991a65b55f14c0280f0a6aa"
+            "sha256": "ef9d59d1b66f1b3e06e7fbcf8e03e805f97915631c3b24063a54ae1645b25c60"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -26,11 +26,11 @@
         },
         "cachecontrol": {
             "hashes": [
-                "sha256:1675f6b0ed902b419f60af4f1d33486e2379743e3723c594eca2f95b10e4370a",
-                "sha256:b5d0c98f7ee9f02e2d5a85af98b9a76c0a2c73c972c142291f823a0ed2eb7a78"
+                "sha256:b0d43d8f71948ef5ebdee5fe236b86c6ffc7799370453dccb0e894c20dfa487c",
+                "sha256:d8aca75b82eec92d84b5d6eb8c8f66ea16f09d2adb09dbca27fe2d5fc8d3732d"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==0.12.9"
+            "version": "==0.12.10"
         },
         "cachetools": {
             "hashes": [
@@ -63,6 +63,14 @@
             "index": "pypi",
             "version": "==3.2.9"
         },
+        "django-cors-headers": {
+            "hashes": [
+                "sha256:cba6e99659abb0e47cc4aaabb8fcde03f193e6bb3b92ba47c5185ec4cedc5d9e",
+                "sha256:cd6f4360f5246569c149dc1c40c907c191f1ec45551e10d2a2e2e68512652f78"
+            ],
+            "index": "pypi",
+            "version": "==3.10.0"
+        },
         "djangorestframework": {
             "hashes": [
                 "sha256:6d1d59f623a5ad0509fe0d6bfe93cbdfe17b8116ebc8eda86d45f6e16e819aaf",
@@ -80,11 +88,11 @@
         },
         "firebase-admin": {
             "hashes": [
-                "sha256:2456278255512822f7e8b2f1c86153d56e780eae4a9caa1b12e43710d1326e7d",
-                "sha256:7b5b9e125924abb9e90e160615697790b549ce805022c6dcc43f762475c6ddff"
+                "sha256:a879c0d49c1bebe05f0aeb8d857e64288f8a251293c5932a160dc24846557586",
+                "sha256:d103eb58063ef67b63219efdbc0d01388fa20ea1e59633036395f3c7ba733488"
             ],
             "index": "pypi",
-            "version": "==5.0.3"
+            "version": "==5.1.0"
         },
         "google-api-core": {
             "extras": [
