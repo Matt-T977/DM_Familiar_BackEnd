@@ -72,10 +72,10 @@ class BookList(APIView):
     
     
     # Get All Books
-    def get(self, request, ProjectId):
+    def get(self, request, ProjectId, uid):
         book_list = []
-        docs = db.collection(u'Projects').document(ProjectId).collection(
-                u'Books').stream()
+        docs = db.collection(u'Users').document(uid).collection(u'Projects').document(
+            ProjectId).collection(u'Books').stream()
 
         for doc in docs:
             book_list.append(doc.to_dict())
@@ -83,10 +83,10 @@ class BookList(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # Create Book
-    def post(self, request, ProjectId):
+    def post(self, request, ProjectId, uid):
         serializer = BookSerializer(data=request.data)
         if serializer.is_valid():
-            db.collection('Projects').document(ProjectId).collection(
+            db.collection(u'Users').document(uid).collection('Projects').document(ProjectId).collection(
                 'Books').document(request.data.get("title")).set(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -97,8 +97,8 @@ class Book(APIView):
 
 
     # Get Selected Book
-    def get(self, request, ProjectId, BookId):
-        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+    def get(self, request, ProjectId, BookId, uid):
+        doc_ref = db.collection(u'Users').document(uid).collection(u'Projects').document(ProjectId).collection(
             u'Books').document(BookId)
 
         doc = doc_ref.get()
@@ -109,8 +109,8 @@ class Book(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     # Edit Book
-    def patch(self, request, ProjectId, BookId):
-        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+    def patch(self, request, ProjectId, BookId, uid):
+        doc_ref = db.collection(u'Users').document(uid).collection(u'Projects').document(ProjectId).collection(
             u'Books').document(BookId)
         doc_ref.update(request.data)
 
@@ -122,8 +122,8 @@ class Book(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     # Delete Book
-    def delete(self, request, ProjectId, BookId):
-        db.collection(u'Projects').document(ProjectId).collection(
+    def delete(self, request, ProjectId, BookId, uid):
+        db.collection(u'Users').document(uid).collection(u'Projects').document(ProjectId).collection(
             u'Books').document(BookId).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -132,9 +132,9 @@ class ChapterList(APIView):
 
 
     # Get All Chapters for that Book
-    def get(self, request, ProjectId, BookId):
+    def get(self, request, ProjectId, BookId, uid):
         chapter_list = []
-        docs = db.collection(u'Projects').document(ProjectId).collection(
+        docs = db.collection(u'Users').document(uid).collection(u'Projects').document(ProjectId).collection(
             u'Books').document(BookId).collection(u'Chapters').stream()
 
         for doc in docs:
@@ -143,10 +143,10 @@ class ChapterList(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # Create New Chapter for that Book
-    def post(self, request, ProjectId, BookId):
+    def post(self, request, ProjectId, BookId, uid):
         serializer = ChapterSerializer(data=request.data)
         if serializer.is_valid():
-            db.collection('Projects').document(ProjectId).collection(
+            db.collection(u'Users').document(uid).collection('Projects').document(ProjectId).collection(
                 'Books').document(BookId).collection('Chapters').document(request.data.get("title")).set(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -157,8 +157,8 @@ class Chapter(APIView):
 
 
     # Get selected chapter of Book
-    def get(self, request, ProjectId, BookId, ChapterId):
-        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+    def get(self, request, ProjectId, BookId, ChapterId, uid):
+        doc_ref = db.collection(u'Users').document(uid).collection(u'Projects').document(ProjectId).collection(
             u'Books').document(BookId).collection('Chapters').document(ChapterId)
 
         doc = doc_ref.get()
@@ -169,8 +169,8 @@ class Chapter(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     # Edit Chapter
-    def patch(self, request, ProjectId, BookId, ChapterId):
-        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+    def patch(self, request, ProjectId, BookId, ChapterId, uid):
+        doc_ref = db.collection(u'Users').document(uid).collection(u'Projects').document(ProjectId).collection(
             u'Books').document(BookId).collection('Chapters').document(ChapterId)
         doc_ref.update(request.data)
 
@@ -182,8 +182,8 @@ class Chapter(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     # Delete Chapter
-    def delete(self, request, ProjectId, BookId, ChapterId):
-        db.collection(u'Projects').document(ProjectId).collection(
+    def delete(self, request, ProjectId, BookId, ChapterId, uid):
+        db.collection(u'Users').document(uid).collection(u'Projects').document(ProjectId).collection(
             u'Books').document(BookId).collection('Chapters').document(ChapterId).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
