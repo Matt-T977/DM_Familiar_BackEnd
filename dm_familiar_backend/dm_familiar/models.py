@@ -11,7 +11,7 @@ class User(models.Model):
 class Project(models.Model):
     name = models.TextField(max_length=20,blank=True,null=True)
     creation_date = models.DateField(null=True, blank=True)
-    summary = models.TextField(max_length=250,blank=True,null=True)
+    summary = models.TextField(max_length=1000,blank=True,null=True)
     include_char_sheet = models.BooleanField(default=False)
     include_text_doc = models.BooleanField(default=False)
     include_static_assets = models.BooleanField(default=False)
@@ -21,13 +21,13 @@ class Project(models.Model):
 
 class Book(models.Model):
     title = models.TextField(max_length=35,blank=True,null=True)
-    summary = models.TextField(max_length=250,blank=True,null=True)
+    summary = models.TextField(max_length=1000,blank=True,null=True)
     category = models.TextField(max_length=35,blank=True,null=True)
 
 class Chapter(models.Model):
     chapter_number = models.IntegerField(default=0)
     title = models.TextField(max_length=35,blank=True,null=True)
-    summary = models.TextField(max_length=250,blank=True,null=True)
+    summary = models.TextField(max_length=1000,blank=True,null=True)
     body = models.TextField(blank=True,null=True)
 
 class StaticAsset(models.Model):
@@ -36,23 +36,23 @@ class StaticAsset(models.Model):
 
 class Video(models.Model):
     title = models.TextField(max_length=35,blank=True,null=True)
-    summary = models.TextField(max_length=250,blank=True,null=True)
+    summary = models.TextField(max_length=1000,blank=True,null=True)
     duration = models.IntegerField(default=0)
 
 class Audio(models.Model):
     title = models.TextField(max_length=35,blank=True,null=True)
-    summary = models.TextField(max_length=250,blank=True,null=True)
+    summary = models.TextField(max_length=1000,blank=True,null=True)
     duration = models.IntegerField(default=0)
 
 class Location(models.Model):
     name = models.TextField(max_length=35,blank=True,null=True)
     location_description = models.TextField(max_length=250,blank=True,null=True)
-    description = models.TextField(max_length=250,blank=True,null=True)
+    description = models.TextField(max_length=2000,blank=True,null=True)
 
 class MinorLocation(models.Model):
     name = models.TextField(max_length=35,blank=True,null=True)
     location_description = models.TextField(max_length=250,blank=True,null=True)
-    description = models.TextField(max_length=250,blank=True,null=True)
+    description = models.TextField(max_length=2000,blank=True,null=True)
 
 class Character(models.Model):
     # Main Info
@@ -106,9 +106,9 @@ class Character(models.Model):
     survival = models.BooleanField(default=False)
 
     # Personality Traits
-    traits = models.TextField(max_length=250,blank=True,null=True)
-    ideals = models.TextField(max_length=250,blank=True,null=True)
-    bonds = models.TextField(max_length=250,blank=True,null=True)
-    flaws = models.TextField(max_length=250,blank=True,null=True)
+    traits = models.TextField(max_length=1000,blank=True,null=True)
+    ideals = models.TextField(max_length=1000,blank=True,null=True)
+    bonds = models.TextField(max_length=1000,blank=True,null=True)
+    flaws = models.TextField(max_length=1000,blank=True,null=True)
 
     # features??
