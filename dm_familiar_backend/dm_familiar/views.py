@@ -491,9 +491,9 @@ class CharacterList(APIView):
 
 
         # Get All Characters
-    def get(self, request, ProjectId):
+    def get(self, request, ProjectId, uid):
         character_list = []
-        docs = db.collection(u'Projects').document(ProjectId).collection(u'Characters').stream()
+        docs = db.collection(u'Users').document(uid).collection(u'Projects').document(ProjectId).collection(u'Characters').stream()
 
         for doc in docs:
             character_list.append(doc.to_dict())
@@ -501,10 +501,10 @@ class CharacterList(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # Create New Character
-    def post(self, request, ProjectId):
+    def post(self, request, ProjectId, uid):
         serializer = CharacterSerializer(data=request.data)
         if serializer.is_valid():
-            db.collection('Projects').document(ProjectId).collection(
+            db.collection(u'Users').document(uid).collection('Projects').document(ProjectId).collection(
                 u'Characters').document(request.data.get("name")).set(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -515,8 +515,8 @@ class Character(APIView):
 
 
     # Get selected Character
-    def get(self, request, ProjectId, CharacterId):
-        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+    def get(self, request, ProjectId, CharacterId, uid):
+        doc_ref = db.collection(u'Users').document(uid).collection(u'Projects').document(ProjectId).collection(
             u'Characters').document(CharacterId)
 
         doc = doc_ref.get()
@@ -527,8 +527,8 @@ class Character(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     # Edit Character
-    def patch(self, request, ProjectId, CharacterId):
-        doc_ref = db.collection(u'Projects').document(ProjectId).collection(
+    def patch(self, request, ProjectId, CharacterId, uid):
+        doc_ref = db.collection(u'Users').document(uid).collection(u'Projects').document(ProjectId).collection(
             u'Characters').document(CharacterId)
         doc_ref.update(request.data)
 
@@ -540,7 +540,7 @@ class Character(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     # Delete Character
-    def delete(self, request, ProjectId, CharacterId):
-        db.collection(u'Projects').document(ProjectId).collection(
+    def delete(self, request, ProjectId, CharacterId, uid):
+        db.collection(u'Users').document(uid).collection(u'Projects').document(ProjectId).collection(
             u'Characters').document(CharacterId).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

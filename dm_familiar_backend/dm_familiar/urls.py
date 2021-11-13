@@ -18,6 +18,6 @@ urlpatterns = [
     path('project/<str:ProjectId>/location/<str:LocationId>', views.Location.as_view()),
     path('project/<str:ProjectId>/location/<str:LocationId>/minor-location/list', views.MinorLocationList.as_view()),
     path('project/<str:ProjectId>/location/<str:LocationId>/minor-location/<str:MinorLocationId>', views.MinorLocation.as_view()),
-    path('project/<str:ProjectId>/character/list', views.CharacterList.as_view()),
-    path('project/<str:ProjectId>/character/<str:CharacterId>', views.Character.as_view()),
+    path('<str:uid>/project/<str:ProjectId>/character/list', views.CharacterList.as_view()),
+    path('<str:uid>/project/<str:ProjectId>/character/<str:CharacterId>', views.Character.as_view()),
 ]
