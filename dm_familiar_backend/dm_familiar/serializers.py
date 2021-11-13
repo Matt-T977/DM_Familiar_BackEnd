@@ -42,6 +42,8 @@ class ChapterSerializer(serializers.ModelSerializer):
             'title',
             'summary',
             'body',
+            'file',
+            'upload',
         ]
 
 class StaticAssetSerializer(serializers.ModelSerializer):

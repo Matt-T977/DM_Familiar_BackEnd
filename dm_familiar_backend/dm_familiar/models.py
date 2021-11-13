@@ -29,6 +29,8 @@ class Chapter(models.Model):
     title = models.TextField(max_length=35,blank=True,null=True)
     summary = models.TextField(max_length=1000,blank=True,null=True)
     body = models.TextField(blank=True,null=True)
+    file = models.FileField(blank=True,null=True)
+    upload = models.BooleanField(default=False)
 
 class StaticAsset(models.Model):
     title = models.TextField(max_length=35,blank=True,null=True)

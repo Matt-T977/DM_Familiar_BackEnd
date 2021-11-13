@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import serializers, status
 import firebase_admin
 from firebase_admin import credentials, firestore
+from docx import Document
 
 cred = credentials.Certificate("../serviceAccountKey.json")
 firebase_admin.initialize_app(cred)
@@ -145,12 +146,25 @@ class ChapterList(APIView):
     # Create New Chapter for that Book
     def post(self, request, ProjectId, BookId, uid):
         serializer = ChapterSerializer(data=request.data)
+        
         if serializer.is_valid():
+            if serializer.data.get("upload") == True:
+                doc_as_text = Document(request.data.get("file"))
+                doc_as_string = ''
+                for paragraph in doc_as_text.paragraphs:
+                    doc_as_string += (paragraph.text)
+                file_data = serializer.data.copy()
+                file_data["body"] = doc_as_string
+                print(file_data)
+                db.collection(u'Users').document(uid).collection('Projects').document(ProjectId).collection(
+                'Books').document(BookId).collection('Chapters').document(request.data.get("title")).set(file_data)
+                return Response(file_data, status=status.HTTP_201_CREATED)
             db.collection(u'Users').document(uid).collection('Projects').document(ProjectId).collection(
                 'Books').document(BookId).collection('Chapters').document(request.data.get("title")).set(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class Chapter(APIView):
